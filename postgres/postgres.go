@@ -4,7 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/lib/pq"
 )
 
@@ -13,8 +15,9 @@ type Postgres struct {
 }
 
 func New() (*Postgres, error) {
-	databaseSource := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable", "localhost", 5432, "root", "password", "wallet")
+	databaseSource := fmt.Sprintf("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=disable", os.Getenv("HOST"), os.Getenv("PORT"), os.Getenv("USER"),os.Getenv("PASSWORD") , os.Getenv("DB_NAME"))
+
 	db, err := sql.Open("postgres", databaseSource)
 	if err != nil {
 		log.Fatal(err)
