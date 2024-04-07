@@ -30,6 +30,7 @@ func main() {
 	e.GET("/api/v1/wallets/:wallet_type", handler.WalletByWalletTypeHandler)
 
 	e.GET("/api/v1/users/:user_id/wallets", handler.WalletByUserIdHandler)
+	e.DELETE("/api/v1/users/:user_id/wallets", handler.DeleteWalletByUserIdHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

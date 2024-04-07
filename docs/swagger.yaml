@@ -36,6 +36,30 @@ info:
   version: "1.1"
 paths:
   /api/v1/users/:user_id/wallets:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a wallet by User Id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/wallet.Wallet'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wallet.Err'
+      summary: Delete a wallet by User Id
+      tags:
+      - wallet
     get:
       consumes:
       - application/json
@@ -77,6 +101,24 @@ paths:
           schema:
             $ref: '#/definitions/wallet.Err'
       summary: Get all wallets
+      tags:
+      - wallet
+    patch:
+      consumes:
+      - application/json
+      description: Update a wallet
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/wallet.Wallet'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wallet.Err'
+      summary: Update a wallet
       tags:
       - wallet
     post:

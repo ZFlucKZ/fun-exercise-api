@@ -16,6 +16,7 @@ type Storer interface {
 	UpdateWallet(wallet *Wallet) (err error)
 	Wallet(userId string) ([]Wallet, error)
 	WalletByUserId(userId string) ([]Wallet, error)
+	DeleteWalletByUserId(userId string) (err error)
 }
 
 func New(db Storer) *Handler {
@@ -131,4 +132,26 @@ func (h *Handler) WalletByUserIdHandler(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
 	}
 	return c.JSON(http.StatusOK, wallet)
+}
+
+//  DeleteWalletByUserIdHandler
+//	@Summary		Delete a wallet by User Id
+//	@Description	Delete a wallet by User Id
+//  @Param			user_id	path	string	true	"user_id"
+//	@Tags			wallet
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Wallet
+//	@Router			/api/v1/users/:user_id/wallets [delete]
+//	@Failure		500	{object}	Err
+func (h *Handler) DeleteWalletByUserIdHandler(c echo.Context) error {
+	userId := c.Param("user_id")
+
+	err := h.store.DeleteWalletByUserId(userId)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, "Wallet deleted")
 }

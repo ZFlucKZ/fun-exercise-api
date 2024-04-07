@@ -149,3 +149,17 @@ func (p *Postgres) WalletByUserId(userId string) ([]wallet.Wallet, error) {
 	}
 	return wallets, nil
 }
+
+func (p *Postgres) DeleteWalletByUserId(userId string) error {
+	stmt, err := p.Db.Prepare("DELETE FROM user_wallet WHERE user_id = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(userId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
