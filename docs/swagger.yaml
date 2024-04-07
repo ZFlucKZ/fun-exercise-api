@@ -54,4 +54,29 @@ paths:
       summary: Get all wallets
       tags:
       - wallet
+  /api/v1/wallets/:wallet-type:
+    get:
+      consumes:
+      - application/json
+      description: Get a wallet by Wallet type
+      parameters:
+      - description: wallet-type
+        in: path
+        name: wallet-type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/wallet.Wallet'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wallet.Err'
+      summary: Get a wallet by Wallet type
+      tags:
+      - wallet
 swagger: "2.0"
