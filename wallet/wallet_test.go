@@ -18,6 +18,10 @@ func (s *StubWallet) Wallets() ([]Wallet, error) {
 	return s.wallet, s.err
 }
 
+func (s *StubWallet) WalletByUserId(userId string) ([]Wallet, error) {
+	return s.wallet, s.err
+}
+
 func TestWallet(t *testing.T) {
 
 
