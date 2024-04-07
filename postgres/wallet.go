@@ -47,6 +47,21 @@ func (p *Postgres) Wallets() ([]wallet.Wallet, error) {
 	return wallets, nil
 }
 
+func (p *Postgres) CreateWallet(wallet *wallet.Wallet) (int, error){
+	stmt, err := p.Db.Prepare("INSERT INTO user_wallet(user_id, user_name, wallet_name, wallet_type, balance, created_at) VALUES($1, $2, $3, $4, $5, $6) RETURNING id")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	var w Wallet
+	err = stmt.QueryRow(wallet.UserID, wallet.UserName, wallet.WalletName, wallet.WalletType, wallet.Balance, wallet.CreatedAt).Scan(&w.ID)
+	if err != nil {
+		return 0, err
+	}
+	return w.ID, nil
+}
+
 func (p *Postgres) Wallet(walletType string) ([]wallet.Wallet, error) {
 	stmt, err := p.Db.Prepare("SELECT * FROM user_wallet WHERE wallet_type = $1")
 	if err != nil {

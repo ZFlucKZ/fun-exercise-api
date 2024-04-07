@@ -10,7 +10,7 @@ import (
 )
 
 //	@title			Wallet API
-//	@version		1.0
+//	@version		1.1
 //	@description	Sophisticated Wallet API
 //	@host			localhost:1323
 func main() {
@@ -21,9 +21,13 @@ func main() {
 
 	e := echo.New()
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	
 	handler := wallet.New(p)
 	e.GET("/api/v1/wallets", handler.WalletHandler)
+	e.POST("/api/v1/wallets", handler.CreateWalletHandler)
+
 	e.GET("/api/v1/wallets/:wallet_type", handler.WalletByWalletTypeHandler)
+
 	e.GET("/api/v1/users/:user_id/wallets", handler.WalletByUserIdHandler)
 
 	e.Logger.Fatal(e.Start(":1323"))

@@ -33,8 +33,33 @@ info:
   contact: {}
   description: Sophisticated Wallet API
   title: Wallet API
-  version: "1.0"
+  version: "1.1"
 paths:
+  /api/v1/users/:user_id/wallets:
+    get:
+      consumes:
+      - application/json
+      description: Get a wallet by User Id
+      parameters:
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/wallet.Wallet'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wallet.Err'
+      summary: Get a wallet by User Id
+      tags:
+      - wallet
   /api/v1/wallets:
     get:
       consumes:

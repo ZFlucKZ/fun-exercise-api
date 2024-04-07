@@ -12,6 +12,7 @@ type Handler struct {
 
 type Storer interface {
 	Wallets() ([]Wallet, error)
+	CreateWallet(wallet *Wallet) (id int, err error)
 	Wallet(userId string) ([]Wallet, error)
 	WalletByUserId(userId string) ([]Wallet, error)
 }
@@ -24,7 +25,7 @@ type Err struct {
 	Message string `json:"message"`
 }
 
-// WalletHandler
+//  WalletHandler
 //	@Summary		Get all wallets
 //	@Description	Get all wallets
 //	@Tags			wallet
@@ -41,7 +42,30 @@ func (h *Handler) WalletHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, wallets)
 }
 
-// WalletByWalletTypeHandler
+//  CreateWalletHandler
+//	@Summary		Create a wallet
+//	@Description	Create a wallet
+//	@Tags			wallet
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Wallet
+//	@Router			/api/v1/wallets [post]
+//	@Failure		500	{object}	Err
+func (h *Handler) CreateWalletHandler(c echo.Context) error {
+	wallet := new(Wallet)
+	if err := c.Bind(wallet); err != nil {
+		return c.JSON(http.StatusBadRequest, Err{Message: err.Error()})
+	}
+
+	id, err := h.store.CreateWallet(wallet)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, Err{Message: err.Error()})
+	}
+	wallet.ID = id
+	return c.JSON(http.StatusOK, wallet)
+}
+
+//  WalletByWalletTypeHandler
 //	@Summary		Get a wallet by Wallet type
 //	@Description	Get a wallet by Wallet type
 //  @Param			wallet-type	path	string	true	"wallet-type"
@@ -62,6 +86,16 @@ func (h *Handler) WalletByWalletTypeHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, wallet)
 }
 
+//  WalletByUserIdHandler
+//	@Summary		Get a wallet by User Id
+//	@Description	Get a wallet by User Id
+//  @Param			user_id	path	string	true	"user_id"
+//	@Tags			wallet
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	Wallet
+//	@Router			/api/v1/users/:user_id/wallets [get]
+//	@Failure		500	{object}	Err
 func (h *Handler) WalletByUserIdHandler(c echo.Context) error {
 	userId := c.Param("user_id")
 
